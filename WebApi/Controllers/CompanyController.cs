@@ -21,33 +21,52 @@ namespace WebApi.Controllers
         }
         // GET api/<controller>
         [Route("GetAll")]
-        public IEnumerable<CompanyDto> GetAll()
+        public async Task<IEnumerable<CompanyDto>> GetAll()
         {
-            var items = _companyService.GetAllCompanies();
+            var items = await _companyService.GetAllCompanies();
             return _mapper.Map<IEnumerable<CompanyDto>>(items);
         }
 
         // GET api/<controller>/5
         [Route("GetByCompanyCode")]
-        public CompanyDto Get(string companyCode)
+        public async Task<CompanyDto> Get(string companyCode)
         {
-            var item = _companyService.GetCompanyByCode(companyCode);
+            var item = await _companyService.GetCompanyByCode(companyCode);
             return _mapper.Map<CompanyDto>(item);
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
+        //POST api/<controller>
+        public async Task<bool> Post([FromBody] CompanyDto company)
         {
+            CompanyInfo companyInfo = _mapper.Map<CompanyInfo>(company);
+            return await _companyService.SaveCompany(companyInfo);
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public async Task<bool> Put([FromBody] CompanyDto company)
         {
+            CompanyInfo companyInfo = _mapper.Map<CompanyInfo>(company);
+
+            if (String.IsNullOrEmpty(companyInfo.CompanyCode))
+            {
+                throw new Exception("Invalid Company Code Provided");
+            }
+
+            var searchedCompanyInfoObject = await _companyService.GetCompanyByCode(company.CompanyCode);
+
+            if (searchedCompanyInfoObject == null)
+            {
+                throw new Exception("Provided Company Code not Found");
+            }
+
+            return await _companyService.SaveCompany(companyInfo);
+
         }
 
         // DELETE api/<controller>/5
-        public void Delete(int id)
+        public async Task<bool> Delete(string companyCode)
         {
+            return await _companyService.RemoveCompanyByCode(companyCode);
         }
     }
 }

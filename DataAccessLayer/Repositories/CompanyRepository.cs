@@ -2,6 +2,7 @@
 using System.Linq;
 using DataAccessLayer.Model.Interfaces;
 using DataAccessLayer.Model.Models;
+using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
@@ -14,36 +15,50 @@ namespace DataAccessLayer.Repositories
 		    _companyDbWrapper = companyDbWrapper;
         }
 
-        public IEnumerable<Company> GetAll()
+        public async Task<IEnumerable<Company>> GetAll()
         {
-            return _companyDbWrapper.FindAll();
+            return await _companyDbWrapper.FindAllAsync();
         }
 
-        public Company GetByCode(string companyCode)
+        public async Task<Company> GetByCode(string companyCode)
         {
-            return _companyDbWrapper.Find(t => t.CompanyCode.Equals(companyCode))?.FirstOrDefault();
+            var result = await _companyDbWrapper.FindAsync(t => t.CompanyCode.Equals(companyCode));
+
+            return result?.FirstOrDefault();
         }
 
-        public bool SaveCompany(Company company)
+        public async Task<bool> SaveCompany(Company company)
         {
-            var itemRepo = _companyDbWrapper.Find(t =>
-                t.SiteId.Equals(company.SiteId) && t.CompanyCode.Equals(company.CompanyCode))?.FirstOrDefault();
-            if (itemRepo !=null)
+            var itemRepo = await _companyDbWrapper.FindAsync(t =>
+                t.SiteId.Equals(company.SiteId) && t.CompanyCode.Equals(company.CompanyCode));
+            var item = itemRepo?.FirstOrDefault();
+
+            if (item != null)
             {
-                itemRepo.CompanyName = company.CompanyName;
-                itemRepo.AddressLine1 = company.AddressLine1;
-                itemRepo.AddressLine2 = company.AddressLine2;
-                itemRepo.AddressLine3 = company.AddressLine3;
-                itemRepo.Country = company.Country;
-                itemRepo.EquipmentCompanyCode = company.EquipmentCompanyCode;
-                itemRepo.FaxNumber = company.FaxNumber;
-                itemRepo.PhoneNumber = company.PhoneNumber;
-                itemRepo.PostalZipCode = company.PostalZipCode;
-                itemRepo.LastModified = company.LastModified;
-                return _companyDbWrapper.Update(itemRepo);
+                item.CompanyName = company.CompanyName;
+                item.AddressLine1 = company.AddressLine1;
+                item.AddressLine2 = company.AddressLine2;
+                item.AddressLine3 = company.AddressLine3;
+                item.Country = company.Country;
+                item.EquipmentCompanyCode = company.EquipmentCompanyCode;
+                item.FaxNumber = company.FaxNumber;
+                item.PhoneNumber = company.PhoneNumber;
+                item.PostalZipCode = company.PostalZipCode;
+                item.LastModified = company.LastModified;
+                return await _companyDbWrapper.UpdateAsync(item);
             }
 
-            return _companyDbWrapper.Insert(company);
+            return await _companyDbWrapper.InsertAsync(company);
+        }
+
+        public async Task<bool> RemoveByCode(string companyCode)
+        {
+            bool result = false;
+            if (companyCode != null)
+            {
+                result = await _companyDbWrapper.DeleteAsync(t => t.CompanyCode.Equals(companyCode));
+            }
+            return result;
         }
     }
 }

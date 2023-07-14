@@ -81,7 +81,13 @@ namespace DataAccessLayer.Database
 			{
 				var entities = FindAll();
 				var entity = entities.Where(expression.Compile());
-				foreach (var dataEntity in entity)
+				//Create a Deep Copy Otherwise there are errors
+				List<T> entitiesToDelete = new List<T>();
+				foreach (var data in entity)
+				{
+					entitiesToDelete.Add(data);
+				}
+				foreach (var dataEntity in entitiesToDelete)
 				{
 					DatabaseInstance.Remove(Tuple.Create(dataEntity.SiteId, dataEntity.CompanyCode));
 				}
