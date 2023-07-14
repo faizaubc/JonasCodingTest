@@ -4,6 +4,8 @@ using System.Web.Http;
 using AutoMapper;
 using BusinessLayer.Model.Interfaces;
 using WebApi.Models;
+using BusinessLayer.Model.Models;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -18,6 +20,7 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
         // GET api/<controller>
+        [Route("GetAll")]
         public IEnumerable<CompanyDto> GetAll()
         {
             var items = _companyService.GetAllCompanies();
@@ -25,6 +28,7 @@ namespace WebApi.Controllers
         }
 
         // GET api/<controller>/5
+        [Route("GetByCompanyCode")]
         public CompanyDto Get(string companyCode)
         {
             var item = _companyService.GetCompanyByCode(companyCode);
