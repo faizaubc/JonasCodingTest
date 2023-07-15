@@ -6,6 +6,7 @@ using BusinessLayer.Model.Interfaces;
 using WebApi.Models;
 using BusinessLayer.Model.Models;
 using System.Threading.Tasks;
+using Ninject.Extensions.Logging;
 
 namespace WebApi.Controllers
 {
@@ -13,33 +14,61 @@ namespace WebApi.Controllers
     {
         private readonly ICompanyService _companyService;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public CompanyController(ICompanyService companyService, IMapper mapper)
+        public CompanyController(ICompanyService companyService, IMapper mapper, ILogger logger)
         {
             _companyService = companyService;
             _mapper = mapper;
+            _logger = logger;
+
         }
         // GET api/<controller>
         [Route("GetAll")]
         public async Task<IEnumerable<CompanyDto>> GetAll()
         {
-            var items = await _companyService.GetAllCompanies();
-            return _mapper.Map<IEnumerable<CompanyDto>>(items);
+            try
+            {
+                var items = await _companyService.GetAllCompanies();
+                return _mapper.Map<IEnumerable<CompanyDto>>(items);
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException("Exception", e);
+                return null;
+            }
         }
 
         // GET api/<controller>/5
         [Route("GetByCompanyCode")]
         public async Task<CompanyDto> Get(string companyCode)
         {
-            var item = await _companyService.GetCompanyByCode(companyCode);
-            return _mapper.Map<CompanyDto>(item);
+            try
+            {
+                var item = await _companyService.GetCompanyByCode(companyCode);
+                return _mapper.Map<CompanyDto>(item);
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException("Exception", e);
+                return null;
+            }
+
         }
 
         //POST api/<controller>
         public async Task<bool> Post([FromBody] CompanyDto company)
         {
-            CompanyInfo companyInfo = _mapper.Map<CompanyInfo>(company);
-            return await _companyService.SaveCompany(companyInfo);
+            try
+            {
+                CompanyInfo companyInfo = _mapper.Map<CompanyInfo>(company);
+                return await _companyService.SaveCompany(companyInfo);
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException("Exception", e);
+                return false;
+            }
         }
 
         // PUT api/<controller>/5
@@ -59,14 +88,30 @@ namespace WebApi.Controllers
                 throw new Exception("Provided Company Code not Found");
             }
 
-            return await _companyService.SaveCompany(companyInfo);
+            try
+            {
+                return await _companyService.SaveCompany(companyInfo);
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException("Exception", e);
+                return false;
+            }
 
         }
 
         // DELETE api/<controller>/5
         public async Task<bool> Delete(string companyCode)
         {
-            return await _companyService.RemoveCompanyByCode(companyCode);
+            try
+            {
+                return await _companyService.RemoveCompanyByCode(companyCode);
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException("Exception", e);
+                return false;
+            }
         }
     }
 }
