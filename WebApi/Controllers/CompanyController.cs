@@ -34,7 +34,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                _logger.ErrorException("Exception", e);
+                _logger.ErrorException("Exception: Getting All Company Data", e);
                 return null;
             }
         }
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                _logger.ErrorException("Exception", e);
+                _logger.ErrorException("Exception: Grabbing Company Data By Code", e);
                 return null;
             }
 
@@ -66,7 +66,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                _logger.ErrorException("Exception", e);
+                _logger.ErrorException("Exception: Saving Company Data", e);
                 return false;
             }
         }
@@ -94,7 +94,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                _logger.ErrorException("Exception", e);
+                _logger.ErrorException("Exception: Updating the Company Data", e);
                 return false;
             }
 
@@ -109,7 +109,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                _logger.ErrorException("Exception", e);
+                _logger.ErrorException("Exception: Deleting Company Object", e);
                 return false;
             }
         }
