@@ -22,23 +22,6 @@ namespace WebApi.Controllers
             _mapper = mapper;
             _logger = logger;
 
-            EmployeeInfo obj = new EmployeeInfo()
-            {
-                SiteId = "1",
-                CompanyCode = "2",
-                EmployeeName = "5",
-                EmployeeCode = "34"
-            };
-            _employeeService.SaveEmployee(obj);
-
-            obj = new EmployeeInfo()
-            {
-                SiteId = "2",
-                CompanyCode = "1",
-                EmployeeName = "5",
-                EmployeeCode = "34"
-            };
-            _employeeService.SaveEmployee(obj);
         }
 
         // GET api/<controller>

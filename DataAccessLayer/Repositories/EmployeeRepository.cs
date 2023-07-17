@@ -49,7 +49,7 @@ namespace DataAccessLayer.Repositories
 
         public async Task<bool> DeleteEmployee(string employeeCode)
         {
-            return await _employeeDbWrapper.DeleteAsync(c => c.EmployeeCode.Equals(employeeCode)).ConfigureAwait(false);
+            return await _employeeDbWrapper.DeleteAsync(c => c.EmployeeCode.Equals(employeeCode));
         }
     }
 }

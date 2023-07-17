@@ -22,21 +22,6 @@ namespace WebApi.Controllers
             _mapper = mapper;
             _logger = logger;
 
-            CompanyInfo companyInfo = new CompanyInfo()
-            {
-                SiteId = "1",
-                CompanyCode = "2",
-            };
-             _companyService.SaveCompany(companyInfo);
-
-            companyInfo = new CompanyInfo()
-            {
-                SiteId = "2",
-                CompanyCode = "1",
-            };
-
-            _companyService.SaveCompany(companyInfo);
-
         }
         // GET api/<controller>
         [Route("GetAll")]
