@@ -11,5 +11,8 @@ namespace DataAccessLayer.Model.Interfaces
     {
         Task<IEnumerable<Employee>> GetAll();
         Task<bool> SaveEmployee(Employee employee);
+        Task<Employee> GetByCode(string employeeCode);
+        Task<bool> DeleteEmployee(string employeeCode);
+
     }
 }

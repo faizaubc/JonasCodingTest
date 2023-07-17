@@ -27,10 +27,31 @@ namespace BusinessLayer.Services
             var res = await _employeeRepository.GetAll();
             return _mapper.Map<IEnumerable<EmployeeInfo>>(res);
         }
+
+        public async Task<EmployeeInfo> GetEmployeeByCode(string employeeCode)
+        {
+            if (String.IsNullOrEmpty(employeeCode))
+            {
+                throw new Exception("Employee Code is not valid");
+            }
+            var result = await _employeeRepository.GetByCode(employeeCode);
+            return _mapper.Map<EmployeeInfo>(result);
+        }
+
         public async Task<bool> SaveEmployee(EmployeeInfo employee)
         {
-            Employee employee_ = _mapper.Map<Employee>(employee);
+            var employee_ = _mapper.Map<Employee>(employee);
             return await _employeeRepository.SaveEmployee(employee_);
+        }
+
+        public async Task<bool> DeleteEmployee(string employeeCode)
+        {
+            if (String.IsNullOrEmpty(employeeCode))
+            {
+                throw new Exception("Employee Code is not valid");
+            }
+            return await _employeeRepository.DeleteEmployee(employeeCode);
+            
         }
     }
 }

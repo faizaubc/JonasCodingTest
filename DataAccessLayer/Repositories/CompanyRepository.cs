@@ -44,10 +44,10 @@ namespace DataAccessLayer.Repositories
                 item.FaxNumber = company.FaxNumber;
                 item.PhoneNumber = company.PhoneNumber;
                 item.PostalZipCode = company.PostalZipCode;
-                item.LastModified = company.LastModified;
+                item.LastModified = System.DateTime.Now;
                 return await _companyDbWrapper.UpdateAsync(item);
             }
-
+            company.LastModified = System.DateTime.Now;
             return await _companyDbWrapper.InsertAsync(company);
         }
 

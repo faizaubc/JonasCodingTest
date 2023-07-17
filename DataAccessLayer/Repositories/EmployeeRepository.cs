@@ -20,6 +20,11 @@ namespace DataAccessLayer.Repositories
             return await _employeeDbWrapper.FindAllAsync();
         }
 
+        public async Task<Employee> GetByCode(string employeeCode)
+        {
+            return (await _employeeDbWrapper.FindAsync(t => t.EmployeeCode.Equals(employeeCode)))?.FirstOrDefault();
+        }
+
         public async Task<bool> SaveEmployee(Employee employee)
         {
             var employeeRepo = await _employeeDbWrapper.FindAsync(t =>
@@ -34,12 +39,17 @@ namespace DataAccessLayer.Repositories
                 item.EmployeeStatus = employee.EmployeeStatus;
                 item.EmailAddress = employee.EmailAddress;
                 item.Phone = employee.Phone;
-                item.LastModified = employee.LastModified;
+                item.LastModified = System.DateTime.Now;
 
                 return await _employeeDbWrapper.UpdateAsync(item);
             }
-
+            employee.LastModified = System.DateTime.Now;
             return await _employeeDbWrapper.InsertAsync(employee);
+        }
+
+        public async Task<bool> DeleteEmployee(string employeeCode)
+        {
+            return await _employeeDbWrapper.DeleteAsync(c => c.EmployeeCode.Equals(employeeCode)).ConfigureAwait(false);
         }
     }
 }

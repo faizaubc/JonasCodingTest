@@ -42,6 +42,8 @@ namespace WebApi.Controllers
         }
 
         // GET api/<controller>
+        [HttpGet]
+        [Route("GetAllEmployees")]
         public async Task<IEnumerable<EmployeeDto>> GetAll()
         {
             try
@@ -56,13 +58,53 @@ namespace WebApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetByEmployeeCode")]
+        public async Task<EmployeeDto> GetEmployeeByCode(string employeeCode)
+        {
+            try
+            {
+                var item = await _employeeService.GetEmployeeByCode(employeeCode);
+                if (item == null)
+                {
+                    throw new Exception("The Provided EmployeeCode is not found");
+                }
+                return _mapper.Map<EmployeeDto>(item);
+            }
+            catch(Exception e)
+            {
+                _logger.ErrorException("Exception: Getting Employee by Employee Code", e);
+                return null;
+            }
+
+        }
+
+        [HttpPut]
+        public async Task<bool> Put( [FromBody] EmployeeDto employee)
+        {
+            if (String.IsNullOrEmpty( employee.EmployeeCode))
+            {
+                throw new Exception("Employee Code is not valid");
+            }
+            var employeeInfo = _mapper.Map<EmployeeInfo>(employee);
+
+            var result = await _employeeService.GetEmployeeByCode(employee.EmployeeCode); 
+
+            if (result == null)
+            {
+                throw new Exception("The Provided EmployeeCode is not found");
+            }
+
+            return await _employeeService.SaveEmployee(employeeInfo);
+        }
 
         //POST api/<controller>
+        [HttpPost]
         public async Task<bool> Post([FromBody] EmployeeDto employee)
         {
             try
             {
-                EmployeeInfo employeeInfo = _mapper.Map<EmployeeInfo>(employee);
+                var employeeInfo = _mapper.Map<EmployeeInfo>(employee);
                 return await _employeeService.SaveEmployee(employeeInfo);
             }
             catch (Exception e)
@@ -73,6 +115,28 @@ namespace WebApi.Controllers
 
         }
 
-   
+        // DELETE api/<controller>
+        [HttpDelete]
+        [Route("{employeeCode}")]
+        public async Task<bool> Delete(string employeeCode)
+        {
+            try
+            {
+                var result = await _employeeService.GetEmployeeByCode(employeeCode);
+
+                if (result == null)
+                {
+                    throw new Exception("The Provided EmployeeCode is not found when trying to Delete in Employee Database");
+                }
+                return await _employeeService.DeleteEmployee(employeeCode);
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException("Exception: Deleting Employees", e);
+                return false;
+            }
+        }
+
+
     }
 }

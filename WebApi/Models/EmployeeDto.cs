@@ -12,6 +12,6 @@ namespace WebApi.Models
         public string EmployeeStatus { get; set; }
         public string EmailAddress { get; set; }
         public string PhoneNumber { get; set; }
-        public DateTime LastModifiedDateTime { get; set; }
+        public string LastModifiedDateTime { get; set; }
     }
 }

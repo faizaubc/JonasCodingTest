@@ -10,6 +10,9 @@ namespace BusinessLayer.Model.Interfaces
     public interface IEmployeeService
     {
         Task<bool> SaveEmployee(EmployeeInfo employeeInfo);
+        Task<EmployeeInfo> GetEmployeeByCode(string employeeCode);
+
         Task<IEnumerable<EmployeeInfo>> GetAllEmployees();
+        Task<bool> DeleteEmployee(string employeeCode);
     }
 }
