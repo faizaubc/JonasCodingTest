@@ -1,5 +1,5 @@
 The swagger UI is installed. After running the web api keeping the URL type, swagger/ ENTER it should show the swagger api
-this way testing is easier 
+this way testing is easier (URI looks something like this : http://localhost:51480/swagger/ui/index)
 
 
 1) Implement rest of Company controller functions, all the way down to data access layer
